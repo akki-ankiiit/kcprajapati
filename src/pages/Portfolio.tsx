@@ -54,10 +54,10 @@ export default function Portfolio() {
               </span>
             </>
           }
-          description="A closer look at the surfaces, joints, edges, and finishes that define our work. The images below are illustrative material and craftsmanship studies, not client project photography."
+          description="A closer look at the surfaces, joints, edges, and finishes that define our work."
           image="/images/kc/marble-tile-pattern.webp"
           imageAlt="Geometric marble floor tiles arranged in a considered pattern"
-          meta={["16 Studies", "06 Categories", "Illustrative Imagery"]}
+          meta={["16 Studies", "06 Categories"]}
         />
 
         <section className="border-b border-ink/10 bg-porcelain/95 text-ink backdrop-blur-md">
@@ -124,13 +124,6 @@ export default function Portfolio() {
                 />
               </motion.div>
             </AnimatePresence>
-
-            <div className="mt-14 border-t border-ink/10 pt-7 md:mt-20">
-              <p className="max-w-2xl text-xs leading-relaxed text-ink/40">
-                All imagery is illustrative. Real KC Prajapati India project
-                photography will replace these studies as it becomes available.
-              </p>
-            </div>
           </div>
         </section>
 

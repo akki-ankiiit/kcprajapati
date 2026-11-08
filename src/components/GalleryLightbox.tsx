@@ -61,7 +61,7 @@ export default function GalleryLightbox({
     >
       <div className="flex items-center justify-between gap-4 border-b border-porcelain/10 px-5 py-4 md:px-8">
         <p className="text-xs text-porcelain/50">
-          Illustrative study · {study.category}
+          {study.category}
         </p>
         <div className="flex items-center gap-5">
           <span className="text-xs text-porcelain/50">

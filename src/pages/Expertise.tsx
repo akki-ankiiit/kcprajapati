@@ -259,7 +259,7 @@ export default function Expertise() {
                     <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone">
                       <img
                         src={material.image}
-                        alt={`Illustrative material study of ${material.name}`}
+                        alt={material.name}
                         loading="lazy"
                         decoding="async"
                         className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
@@ -273,10 +273,6 @@ export default function Expertise() {
                 </Reveal>
               ))}
             </div>
-
-            <p className="mt-10 text-xs text-ink/35">
-              Images are illustrative material studies.
-            </p>
           </div>
         </section>
 

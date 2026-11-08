@@ -55,9 +55,6 @@ export default function FounderPortrait({
                 {founder.initials}
               </span>
             </div>
-            <p className="mt-6 text-xs text-ink/40">
-              Portrait forthcoming
-            </p>
           </div>
 
           <span className="absolute left-6 top-6 text-xs text-ink/30">

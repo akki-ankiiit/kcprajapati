@@ -190,10 +190,6 @@ export default function About() {
 
             <Founders variant="full" />
 
-            <p className="mt-12 max-w-2xl text-xs leading-relaxed text-ink/35">
-              Founder portraits are forthcoming. Monogram cards are used until
-              verified photography is available.
-            </p>
           </div>
         </section>
 

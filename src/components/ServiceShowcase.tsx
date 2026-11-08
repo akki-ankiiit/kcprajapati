@@ -130,9 +130,6 @@ export default function ServiceShowcase({
                     {current.title}
                   </p>
                 </div>
-                <span className="text-xs text-porcelain/45">
-                  Illustrative
-                </span>
               </div>
             </div>
             </Frame>
@@ -153,9 +150,6 @@ export default function ServiceShowcase({
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
-                <span className="absolute bottom-4 right-4 text-xs text-porcelain/60">
-                  Illustrative
-                </span>
               </div>
             </Frame>
 

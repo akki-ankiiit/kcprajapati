@@ -50,13 +50,10 @@ export const site = {
     },
   ],
   contact: {
-    // Contact details must be verified before launch. Until then the site
-    // intentionally shows an honest, editable placeholder rather than
-    // inventing a phone number, email address, or social account.
-    phone: null,
+    phone: "+91 78208 09999",
     whatsapp: null,
-    email: null,
-    address: "Chhattisgarh, India",
+    email: "help@kcprajapati.com",
+    address: "Rajendra Nagar, Raipur, 492001, Chhattisgarh",
     hours: "By appointment",
   },
 } as const;
@@ -70,7 +67,7 @@ export const navLinks = [
 ] as const;
 
 export const contactDisplay = {
-  phone: "Available on request",
-  email: "Available on request",
+  phone: site.contact.phone,
+  email: site.contact.email,
   address: site.contact.address,
 };

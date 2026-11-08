@@ -60,9 +60,6 @@ export default function GalleryCard({
           <span className="bg-ink/45 px-2.5 py-1.5 text-xs text-porcelain/85 backdrop-blur-sm">
             {study.category}
           </span>
-          <span className="text-xs text-porcelain/65">
-            Illustrative
-          </span>
         </div>
 
         <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center border border-porcelain/35 text-porcelain opacity-0 transition-all duration-500 group-hover:opacity-100 md:bottom-5 md:right-5">

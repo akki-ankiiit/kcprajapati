@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
   usePageMeta({
     title: "Privacy Policy",
     description:
-      "How KC Prajapati India handles information shared through this website, and how illustrative imagery is sourced.",
+      "How KC Prajapati India handles information shared through this website.",
   });
 
   return (
@@ -26,15 +26,9 @@ export default function PrivacyPolicy() {
           Information We Collect
         </h2>
         <p className="mt-4">
-          This website does not currently include a live enquiry endpoint, an
-          advertising tracker, or a third-party analytics service. The enquiry
-          form is a preview and does not transmit or store the details you enter.
-        </p>
-        <p className="mt-4">
-          If you contact us through verified phone or email details once they are
-          published, we will receive the information you choose to share — such
-          as your name, contact details, project location, and a description of
-          the work you are planning.
+          If you contact us, we will receive the information you choose to share
+          — such as your name, contact details, project location, and a
+          description of the work you are planning.
         </p>
       </section>
 
@@ -63,24 +57,12 @@ export default function PrivacyPolicy() {
 
       <section>
         <h2 className="font-sans text-3xl text-ink md:text-4xl">
-          Imagery
-        </h2>
-        <p className="mt-4">
-          The photography on this website is illustrative and is used under the
-          Pexels license. It does not depict verified KC Prajapati India
-          projects or the founders. Client project photography will replace
-          these studies as it becomes available.
-        </p>
-      </section>
-
-      <section>
-        <h2 className="font-sans text-3xl text-ink md:text-4xl">
           Your Choices
         </h2>
         <p className="mt-4">
-          Once verified contact details are published, you may use them to ask
-          for access to, correction of, or deletion of any personal information
-          you have shared with us. We will respond within a reasonable period.
+          You may ask us for access to, correction of, or deletion of any
+          personal information you have shared with us. We will respond within a
+          reasonable period.
         </p>
       </section>
 
@@ -89,10 +71,8 @@ export default function PrivacyPolicy() {
           Contact
         </h2>
         <p className="mt-4">
-          KC Prajapati India is based in Chhattisgarh, India. Verified phone,
-          email, and postal details will be published on the contact page before
-          launch. Until then, this website intentionally shows contact details
-          as available on request.
+          KC Prajapati India, Rajendra Nagar, Raipur, 492001, Chhattisgarh, India.
+          Phone: +91 78208 09999. Email: help@kcprajapati.com.
         </p>
       </section>
     </LegalPage>

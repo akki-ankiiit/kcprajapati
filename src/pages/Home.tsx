@@ -121,12 +121,12 @@ export default function Home() {
                 <div className="mt-7 md:mt-9">
                   <SplitText
                     as="h2"
-                    text={"A floor is never\njust a *floor.*"}
+                    text={"Every floor carries\nthe *whole room.*"}
                     className="font-sans text-3xl leading-[1.02] md:text-5xl lg:text-6xl"
                   />
                   <Reveal delay={0.15}>
-                    <p className="mt-3 font-accent text-4xl leading-none text-gold md:text-5xl">
-                      It is the ground beneath everything.
+                    <p className="mt-3 font-sans text-4xl leading-none md:text-5xl">
+                      Everything else in it rests on what we lay.
                     </p>
                   </Reveal>
                 </div>
@@ -134,16 +134,8 @@ export default function Home() {
                 <Reveal delay={0.1}>
                   <div className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-ink/65 md:mt-10 md:text-base">
                     <p>
-                      KC Prajapati India is a father-and-son contracting practice
-                      working in marble and tile across Chhattisgarh. Since 2000,
-                      we have built our reputation one surface at a time —
-                      through measured layouts, clean joints, and finishes that
-                      hold their composure for years.
-                    </p>
-                    <p>
-                      Our work is not decoration. It is the quiet infrastructure
-                      of a space: the floor you cross every morning, the stair
-                      you trust underfoot, the wall that holds the light.
+                      A father-and-son marble and tile team in Chhattisgarh,
+                      working since 2000.
                     </p>
                   </div>
                 </Reveal>

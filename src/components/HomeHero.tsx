@@ -99,14 +99,14 @@ export default function HomeHero() {
         >
           <span className="block overflow-hidden pb-[0.06em]">
             <span data-hero-line className="block">
-              Craftsmanship that stands the test of time,
+              Marble and tile work that lasts,
             </span>
           </span>
           <span className="block overflow-hidden pb-[0.06em]">
             <span data-hero-line className="block">
               built on a{" "}
               <span className="font-accent text-[1.16em] font-normal leading-none">
-                legacy of excellence.
+                done right, every time.
               </span>
             </span>
           </span>

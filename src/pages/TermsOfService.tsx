@@ -31,18 +31,6 @@ export default function TermsOfService() {
         </p>
       </section>
 
-      <section>
-        <h2 className="font-sans text-3xl text-ink md:text-4xl">
-          Illustrative Imagery
-        </h2>
-        <p className="mt-4">
-          Images shown on this website are illustrative material and
-          craftsmanship studies sourced under the Pexels license. They do not
-          represent completed KC Prajapati India projects, client premises, or
-          the founders. Any real project photography will be identified as such
-          when published.
-        </p>
-      </section>
 
       <section>
         <h2 className="font-sans text-3xl text-ink md:text-4xl">
@@ -76,8 +64,7 @@ export default function TermsOfService() {
         <p className="mt-4">
           We aim to keep the website accurate, but details may change without
           notice. We do not guarantee that the site will be uninterrupted or
-          error-free. Contact details are shown as available on request until
-          verified information is published.
+          error-free.
         </p>
       </section>
 

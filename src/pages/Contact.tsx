@@ -91,11 +91,6 @@ export default function Contact() {
                     Share as much or as little as you know. If you are still at
                     the planning stage, that is a good place to begin.
                   </p>
-                  <p className="mt-3 max-w-xl border-l border-gold/60 pl-4 text-xs leading-relaxed text-ink/40">
-                    Form preview — this site does not transmit enquiries yet.
-                    Verified phone and email details will be published before
-                    launch.
-                  </p>
                 </Reveal>
 
                 <Reveal delay={0.14}>
@@ -115,11 +110,6 @@ export default function Contact() {
                           <h3 className="mt-6 font-sans text-4xl">
                             Thank you.
                           </h3>
-                          <p className="mt-3 max-w-md text-base leading-relaxed text-ink/60">
-                            Your details are complete, but this preview form does
-                            not send data. Once verified contact details are
-                            published, the enquiry route will be connected here.
-                          </p>
                           <button
                             type="button"
                             onClick={() => {
@@ -303,11 +293,6 @@ export default function Contact() {
                         <span className="text-ink/35"> · Co-Founder</span>
                       </p>
                     </div>
-
-                    <p className="mt-8 text-xs leading-relaxed text-ink/35">
-                      Phone, email, and social profiles will be published here
-                      once verified.
-                    </p>
                   </div>
                 </Reveal>
 
