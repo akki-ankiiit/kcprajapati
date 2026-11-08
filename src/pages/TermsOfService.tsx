@@ -1,38 +1,107 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import PageTransition from "@/components/PageTransition";
+import LegalPage from "@/components/LegalPage";
+import usePageMeta from "@/hooks/usePageMeta";
 
 export default function TermsOfService() {
+  usePageMeta({
+    title: "Terms of Service",
+    description:
+      "Terms governing use of the KC Prajapati India website, including content, imagery, and service enquiries.",
+  });
+
   return (
-    <PageTransition>
-      <Header theme="dark" />
-      <main className="min-h-screen bg-porcelain pt-24 pb-16 md:pt-32 md:pb-16 md:pb-24 text-ink">
-        <div className="max-w-3xl mx-auto px-5 md:px-8">
-          <h1 className="text-4xl md:text-5xl font-serif mb-8 tracking-tight">Terms of Service</h1>
-          <div className="space-y-6 font-sans text-sm md:text-base leading-relaxed opacity-80">
-            <p>
-              Welcome to Swapnil Jaggi Architects. These Terms of Service outline the rules and regulations for the use of our website and services.
-            </p>
-            <h2 className="text-2xl font-serif mt-12 mb-4">Acceptance of Terms</h2>
-            <p>
-              By accessing this website, we assume you accept these terms and conditions in full. Do not continue to use Swapnil Jaggi Architects's website if you do not accept all of the terms and conditions stated on this page.
-            </p>
-            <h2 className="text-2xl font-serif mt-12 mb-4">Our Services</h2>
-            <p>
-              Swapnil Jaggi Architects provides bespoke interior design and architecture consultation. The materials and information on this website are for general informational purposes only and do not constitute professional advice or a formal agreement.
-            </p>
-            <h2 className="text-2xl font-serif mt-12 mb-4">Intellectual Property Rights</h2>
-            <p>
-              Unless otherwise stated, Swapnil Jaggi Architects and/or its licensors own the intellectual property rights for all material on this website, including photographs, designs, and written content. All intellectual property rights are reserved. You may view and/or print pages for your own personal use subject to restrictions set in these terms and conditions.
-            </p>
-            <h2 className="text-2xl font-serif mt-12 mb-4">Modifications</h2>
-            <p>
-              We reserve the right to revise these terms of service for our website at any time without notice. By using this website, you are agreeing to be bound by the current version of these terms.
-            </p>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </PageTransition>
+    <LegalPage
+      label="Legal"
+      title="Terms of Service"
+      description="The terms that apply to your use of this website and the information published on it."
+      updated="November 2026"
+    >
+      <p>
+        By accessing this website, you agree to these terms. If you do not agree
+        with them, please discontinue use of the site.
+      </p>
+
+      <section>
+        <h2 className="font-sans text-3xl text-ink md:text-4xl">
+          Purpose of This Website
+        </h2>
+        <p className="mt-4">
+          This website presents information about KC Prajapati India, the
+          founders, and the tile and marble contracting services offered. It is
+          intended for general information and enquiry only.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-sans text-3xl text-ink md:text-4xl">
+          Illustrative Imagery
+        </h2>
+        <p className="mt-4">
+          Images shown on this website are illustrative material and
+          craftsmanship studies sourced under the Pexels license. They do not
+          represent completed KC Prajapati India projects, client premises, or
+          the founders. Any real project photography will be identified as such
+          when published.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-sans text-3xl text-ink md:text-4xl">
+          Services and Quotations
+        </h2>
+        <p className="mt-4">
+          Nothing on this website constitutes a quotation, a binding offer, or a
+          professional guarantee. Project scope, materials, timelines, and costs
+          are agreed separately in writing. Site conditions, material
+          availability, and design decisions can affect the work.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-sans text-3xl text-ink md:text-4xl">
+          Intellectual Property
+        </h2>
+        <p className="mt-4">
+          The KC Prajapati India name, wordmark, and original written content on
+          this website belong to KC Prajapati India. Photography remains the
+          property of its respective creators and is used under the applicable
+          license. You may view and print pages for personal, non-commercial
+          use. Reproduction or commercial use requires permission.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-sans text-3xl text-ink md:text-4xl">
+          Accuracy and Availability
+        </h2>
+        <p className="mt-4">
+          We aim to keep the website accurate, but details may change without
+          notice. We do not guarantee that the site will be uninterrupted or
+          error-free. Contact details are shown as available on request until
+          verified information is published.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-sans text-3xl text-ink md:text-4xl">
+          Limitation of Liability
+        </h2>
+        <p className="mt-4">
+          To the extent permitted by law, KC Prajapati India is not liable for
+          any indirect or consequential loss arising from use of this website or
+          reliance on its general information.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="font-sans text-3xl text-ink md:text-4xl">
+          Governing Law
+        </h2>
+        <p className="mt-4">
+          These terms are governed by the laws of India. Any dispute arising in
+          connection with this website is subject to the jurisdiction of the
+          courts of Chhattisgarh, India.
+        </p>
+      </section>
+    </LegalPage>
   );
 }

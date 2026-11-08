@@ -1,0 +1,98 @@
+/* Brand palette for the contact card: porcelain panel, ink type, brass accents. */
+.contact-card .theme_on-brand {
+  --_colors---other--bg: #ffffff;
+  --_colors---base-1000--primary: #1a1a19;
+  --_colors---base-0--primary: #ffffff;
+  --_colors---base-1000--gray-text: rgba(26, 26, 25, 0.6);
+  --_colors---base-1000--disabled: rgba(26, 26, 25, 0.35);
+  --_colors---other--transparent: transparent;
+}
+
+.contact-card .modal_cta_a .a2 {
+  font-size: clamp(4rem, 8vw, 7.5rem);
+  line-height: 1;
+}
+
+.contact-card {
+  --_fonts---font-body: var(--font-sans);
+  --_fonts---font-sans: var(--font-sans);
+  --_fonts---font-accent: var(--font-accent);
+}
+
+.contact-card .modal_cta_a .a2 {
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+}
+
+.contact-card .modal_cta_form .btn {
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.contact-card .modal_cta_form .btn .btn_bg {
+  border-color: var(--color-gold);
+}
+
+.contact-card .modal_cta_form .btn .btn_bg_fill {
+  background-color: var(--color-gold);
+  transition: background-color 250ms var(--ease-soft);
+}
+
+.contact-card .modal_cta_form .btn:hover .btn_bg_fill,
+.contact-card .modal_cta_form .btn:focus-visible .btn_bg_fill {
+  background-color: var(--color-ink);
+}
+
+.contact-card .modal_cta_form .btn .btn_label .l1 {
+  color: #ffffff;
+}
+
+/* Native controls do not inherit the page font, so set it explicitly. */
+.contact-card .w-input,
+.contact-card textarea.w-input {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-ink);
+}
+
+.contact-card .input_field {
+  text-align: left;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.contact-card .input_label {
+  position: static;
+  margin-bottom: 2px;
+}
+
+.contact-card .btn-ico .ico {
+  color: #ffffff;
+}
+
+.contact-card .modal_cta_c_logo .logo_symbol.header {
+  width: 88px;
+  height: 88px;
+}
+
+.contact-card .logo_symbol.ico-48 {
+  width: 76px;
+  height: 76px;
+}
+
+/* Sentence case, no tracking: labels and buttons read as normal text. */
+.contact-card {
+  --_fonts---l1--letter-spacing: 0;
+  --_fonts---p2--letter-spacing: 0;
+}
+
+.contact-card .l1 {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}

@@ -1,340 +1,427 @@
-import { useState, useEffect, useRef } from "react";
 import Header from "@/components/Header";
+import TextLink from "@/components/TextLink";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import ParallaxImage from "@/components/ParallaxImage";
 import SplitText from "@/components/SplitText";
+import SectionLabel from "@/components/SectionLabel";
+import AnimatedNumber from "@/components/AnimatedNumber";
+import Founders from "@/components/Founders";
+import ServiceShowcase from "@/components/ServiceShowcase";
+import Timeline from "@/components/Timeline";
+import GalleryGrid from "@/components/GalleryGrid";
+import ContactCTA from "@/components/ContactCTA";
+import ButtonLink from "@/components/ButtonLink";
+import Reveal from "@/components/Reveal";
+import GlassMirrorSphere from "@/components/GlassMirrorSphere";
+import HomeHero from "@/components/HomeHero";
+import PaperFlowHero from "@/components/PaperFlowHero";
+import RoyalFrame from "@/components/RoyalFrame";
+import usePageMeta from "@/hooks/usePageMeta";
+import { featuredStudies } from "@/data/work";
+import { site } from "@/data/site";
 
-import { Link } from "react-router-dom";
-import { ArrowRight, ArrowLeft } from "lucide-react";
-import { motion, AnimatePresence, useInView, animate } from "framer-motion";
-
-const selectedProjects = [
-  { title: "Om Traders", category: "Commercial", image: "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/WG_09655.jpg", link: "/portfolio/om-traders" },
-  { title: "The Flower Story", category: "Retail", image: "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/DSC08865.JPG", link: "/portfolio/flower-story" },
-  { title: "The Monochrome House", category: "Architecture", image: "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/69a76885-abc4-426f-9955-5a2cb259bd41.jpg", link: "/portfolio/monochrome-house" },
-  { title: "POSH TOWN", category: "Architecture", image: "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/DJI_0009.jpg", link: "/portfolio/posh-town" },
-  { title: "Ford", category: "Architecture & Interiors", image: "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/WG_01440.jpg", link: "/portfolio/ford" },
+const marbleInteriors = [
+  "/images/kc/marble-foyer.webp",
+  "/images/kc/marble-living-room.webp",
+  "/images/kc/marble-hallway.webp",
+  "/images/kc/marble-showroom.webp",
+  "/images/kc/marble-bath-floor.webp",
+  "/images/kc/marble-bathroom.webp",
+  "/images/kc/marble-arches.webp",
+  "/images/kc/curved-marble-hall.webp",
+  "/images/kc/marble-stair-lobby.webp",
+  "/images/kc/marble-stair-hall.webp",
+  "/images/kc/marble-entry-stair.webp",
+  "/images/kc/marble-tile-pattern.webp",
 ];
 
-function AnimatedNumber({ value, label }: { value: number; label: string }) {
-  const nodeRef = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(nodeRef, { margin: "-100px" });
+const experienceStats = [
+  { value: 26, label: "Years of Experience" },
+  { value: 2000, label: "Working Since" },
+  { value: 6, label: "Areas of Expertise", pad: true },
+];
 
-  useEffect(() => {
-    if (isInView && nodeRef.current) {
-      const controls = animate(0, value, {
-        duration: 2.5,
-        ease: "easeOut",
-        onUpdate(v) {
-          if (nodeRef.current) {
-            nodeRef.current.textContent = Math.round(v).toString();
-          }
-        },
-      });
-      return () => controls.stop();
-    }
-  }, [isInView, value]);
-
-  return (
-    <div className="flex flex-col items-center text-center">
-      <div className="text-5xl md:text-7xl font-serif text-ink mb-4 flex items-center justify-center">
-        <span ref={nodeRef}>0</span>
-        <span className="text-4xl md:text-5xl ml-1 text-ink/70">+</span>
-      </div>
-      <p className="text-xs md:text-sm font-sans uppercase tracking-[0.2em] text-ink/60">
-        {label}
-      </p>
+const experienceAside = (
+  <div className="pointer-events-auto flex max-w-xl flex-col gap-5 md:gap-8">
+    <SectionLabel className="text-ink/50">Why KC Prajapati</SectionLabel>
+    <h2 className="font-sans text-[clamp(34px,5.6vw,92px)] leading-[0.98] tracking-[-0.03em] text-ink">
+      Experience you can
+      <br />
+      build <span className="accent-word">on.</span>
+    </h2>
+    <p className="hidden max-w-md text-base leading-relaxed text-ink/65 md:block">
+      Every site, every surface and every handover is held to the same standard
+      we keep when no one is watching.
+    </p>
+    <div className="hidden grid-cols-3 gap-6 border-y border-ink/10 py-6 md:grid">
+      {experienceStats.map((stat) => (
+        <div key={stat.label} className="text-ink">
+          <AnimatedNumber value={stat.value} label={stat.label} pad={stat.pad} />
+        </div>
+      ))}
     </div>
-  );
-}
+    <ButtonLink to="/about" variant="primary" className="w-fit">
+      Our Story
+    </ButtonLink>
+  </div>
+);
 
 export default function Home() {
-  const [currentProject, setCurrentProject] = useState(0);
-  const [activePhilosophyBg, setActivePhilosophyBg] = useState(0);
-
-  const philosophyImages = [
-    "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/WG_09723.jpg",
-    "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/WG_07604-HDR.jpg",
-    "https://www.swapniljaggiarchitects.com/admin/uploads/project_section/WG_08463.jpg"
-  ];
-
-  const nextProject = () => setCurrentProject((prev) => (prev + 1) % selectedProjects.length);
-  const prevProject = () => setCurrentProject((prev) => (prev - 1 + selectedProjects.length) % selectedProjects.length);
+  usePageMeta({
+    title: site.metaTitle,
+    description: site.metaDescription,
+    image: "/images/kc/marble-foyer.webp",
+  });
 
   return (
     <PageTransition>
-      <Header theme="light" />
-      <main className="min-h-screen bg-porcelain">
+      <Header />
+      <main id="main-content" className="min-h-screen bg-porcelain">
+        <HomeHero />
 
-        {/* Section 1: Fresh Editorial Hero */}
-        <section className="relative min-h-screen w-full flex flex-col justify-end pt-24 lg:pt-40 pb-10 md:pb-16 lg:pb-16 md:pb-24 overflow-hidden bg-ink">
-          <div className="absolute inset-0 z-0">
-            <ParallaxImage
-              src="https://images.unsplash.com/photo-1706164971302-e30c0640cc3b?q=80&w=2232&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Luxury Interior Architecture"
-              speed={0.6}
-              priority
-            />
-            {/* Proper overlay so fonts are visible properly */}
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-ink/10 mix-blend-normal" />
-          </div>
+        {/* ------------------------------------------------------------------ */}
+        {/* 02 — Brand introduction                                            */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="relative overflow-hidden bg-porcelain py-20 text-ink md:py-32">
+          <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-18">
+            <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-5">
+                <Reveal>
+                  <RoyalFrame>
+                    <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone">
+                      <ParallaxImage
+                        src="/images/kc/marble-entry-lobby.webp"
+                        alt="Contemporary living space with a polished marble plinth, a sculpted timber staircase and soft daylight"
+                        speed={0.18}
+                      />
+                      <div className="absolute inset-0 bg-ink/5" />
+                    </div>
+                  </RoyalFrame>
+                </Reveal>
 
-          <div className="relative z-10 px-5 md:px-8 xl:px-18 max-w-[1440px] mx-auto w-full text-porcelain flex flex-col md:flex-row justify-between items-end">
-            <div className="max-w-4xl">
-              <h1 className="text-5xl sm:text-6xl md:text-[7vw] lg:text-[8vw] leading-[1.1] font-serif mb-6 tracking-tight text-porcelain/95">
-                Architecture <br className="hidden md:block" />
-                <span className="font-script text-[1.2em] font-normal pb-4 -mb-4 pt-2 -mt-2 pr-8 pl-4 -ml-4 inline-block opacity-90">redefined.</span>
-              </h1>
-              <p className="text-sm md:text-lg font-sans opacity-80 max-w-xl font-light tracking-wide mb-10 leading-relaxed">
-                We craft spaces that transcend utility—merging bespoke design, structural integrity, and personal expression.
-              </p>
+                <div className="relative z-10 -mt-10 ml-auto mr-4 w-[82%] border border-ink/10 bg-porcelain p-5 md:-mt-14 md:mr-8 md:p-6">
+                  <p className="font-accent text-4xl leading-none text-ink md:text-4xl">
+                    Since 2000
+                  </p>
+                  <p className="mt-3 text-xs leading-relaxed text-ink/50">
+                    26 years of hands-on contracting across Chhattisgarh
+                  </p>
+                </div>
 
-              <div className="flex items-center space-x-8">
-                <Link to="/portfolio" className="inline-flex items-center justify-center bg-porcelain text-ink px-8 py-4 text-xs md:text-sm font-sans uppercase tracking-[0.15em] hover:bg-white hover:scale-[1.02] transition-all duration-300 group">
-                  Explore Projects <ArrowRight className="ml-3 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                </Link>
               </div>
-            </div>
 
-            <div className="hidden md:flex flex-col items-end text-right border-l border-porcelain/20 pl-6 pb-2">
-              <p className="font-script text-3xl opacity-80 mb-2 capitalize">Based In</p>
-              <p className="text-sm font-sans opacity-90">Raipur, India</p>
+              <div className="lg:col-span-6 lg:col-start-7 lg:self-center">
+                <Reveal>
+                  <SectionLabel className="text-ink/50">
+                    The Practice
+                  </SectionLabel>
+                </Reveal>
+
+                <div className="mt-7 md:mt-9">
+                  <SplitText
+                    as="h2"
+                    text={"A floor is never\njust a *floor.*"}
+                    className="font-sans text-3xl leading-[1.02] md:text-5xl lg:text-6xl"
+                  />
+                  <Reveal delay={0.15}>
+                    <p className="mt-3 font-accent text-4xl leading-none text-gold md:text-5xl">
+                      It is the ground beneath everything.
+                    </p>
+                  </Reveal>
+                </div>
+
+                <Reveal delay={0.1}>
+                  <div className="mt-8 max-w-xl space-y-5 text-base leading-relaxed text-ink/65 md:mt-10 md:text-base">
+                    <p>
+                      KC Prajapati India is a father-and-son contracting practice
+                      working in marble and tile across Chhattisgarh. Since 2000,
+                      we have built our reputation one surface at a time —
+                      through measured layouts, clean joints, and finishes that
+                      hold their composure for years.
+                    </p>
+                    <p>
+                      Our work is not decoration. It is the quiet infrastructure
+                      of a space: the floor you cross every morning, the stair
+                      you trust underfoot, the wall that holds the light.
+                    </p>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={0.18}>
+                  <div className="mt-10 grid grid-cols-3 gap-4 border-y border-ink/10 py-6 md:mt-12">
+                    <div>
+                      <p className="font-sans text-3xl leading-none md:text-4xl">
+                        26
+                      </p>
+                      <p className="mt-2 text-xs text-ink/45">
+                        Years
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-sans text-3xl leading-none md:text-4xl">
+                        2000
+                      </p>
+                      <p className="mt-2 text-xs text-ink/45">
+                        Established
+                      </p>
+                    </div>
+                    <div>
+                      <p className="font-sans text-3xl leading-none md:text-4xl">
+                        02
+                      </p>
+                      <p className="mt-2 text-xs text-ink/45">
+                        Generations
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+
+                <Reveal delay={0.24}>
+                  <ButtonLink to="/about" variant="primary" className="mt-9">
+                    Our Story
+                  </ButtonLink>
+                </Reveal>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Section 2: Glassmorphic Intro & Typography Mix */}
-        <section className="relative py-12 md:py-16 lg:py-24 px-5 md:px-8 xl:px-18 overflow-hidden bg-stone">
-          <div className="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1690743300187-51d68146adf7?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Texture" className="w-full h-full object-cover opacity-20 mix-blend-multiply" />
-          </div>
-
-          <div className="relative z-10 max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center">
-            <div className="lg:col-span-4 lg:col-start-2 relative max-w-md mx-auto lg:max-w-none w-full">
-              <div className="aspect-[4/5] w-full overflow-hidden shadow-2xl rounded-sm">
-                <ParallaxImage
-                  src="https://www.swapniljaggiarchitects.com/admin/uploads/project_section/khushboo%20enterprises.jpg"
-                  alt="Living Space"
-                  speed={0.2}
-                />
-                <div className="absolute inset-0 bg-ink/10 mix-blend-multiply" />
+        {/* ------------------------------------------------------------------ */}
+        {/* 03 — Founders                                                      */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="bg-stone py-20 text-ink md:py-32">
+          <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-18">
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-6">
+                <Reveal>
+                  <SectionLabel className="text-ink/50">
+                    The Founders
+                  </SectionLabel>
+                </Reveal>
+                <Reveal delay={0.06}>
+                  <h2 className="mt-7 font-sans text-3xl leading-[1.02] md:mt-9 md:text-5xl lg:text-6xl">
+                    Two generations.
+                    <br />
+                    One <span className="accent-word">standard.</span>
+                  </h2>
+                </Reveal>
               </div>
-              {/* Floating Glass Card */}
-              <div className="absolute -bottom-10 -right-6 lg:-right-20 backdrop-blur-xl bg-porcelain/80 border border-white/40 p-8 shadow-2xl max-w-[280px]">
-                <p className="font-script text-3xl mb-3 text-ink">Since 2013</p>
-                <p className="font-sans text-xs leading-relaxed text-ink/80">
-                  Swapnil Jaggi Architects creates spaces that feel unmistakably personal, merging bespoke design, structural integrity, and personal expression.
-                </p>
+
+              <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
+                <Reveal delay={0.12}>
+                  <p className="text-base leading-relaxed text-ink/65 md:text-base">
+                    Kailash Prajapati founded the practice in 2000. Today he
+                    works alongside his son Manish, combining decades of site
+                    experience with a contemporary approach to planning and
+                    delivery.
+                  </p>
+                  <TextLink to="/about" className="mt-6">
+                    Read Their Story
+                  </TextLink>
+                </Reveal>
               </div>
             </div>
 
-            <div className="lg:col-span-5 lg:col-start-7 mt-24 lg:mt-0">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif leading-[1.2] mb-8 md:mb-12 text-ink">
-                <SplitText text="We do not decorate spaces." />
-                <SplitText text="We shape how they are experienced." delay={0.2} />
-              </h2>
-              <div className="text-base font-sans text-ink/70 leading-relaxed space-y-6">
-                <p>
-                  Every project begins with an understanding of the people, rituals and aspirations that will inhabit it. We believe a room should be an extension of those who live in it.
-                </p>
-                <p>
-                  From luxury residences and hotels to immersive retail environments, our studio brings together creative direction, technical expertise, and meticulous execution.
-                </p>
-              </div>
-              <Link to="/about" className="inline-flex items-center justify-center bg-ink text-porcelain px-8 py-4 mt-12 text-xs md:text-sm font-sans uppercase tracking-[0.15em] hover:bg-ink/80 hover:scale-[1.02] transition-all duration-300 group">
-                Learn More About Us <ArrowRight className="ml-3 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </div>
+            <Founders className="mt-14 md:mt-20" framed />
           </div>
         </section>
 
-        {/* Section 3: Centered Immersive Slider (5 Cards, Single Viewport) */}
-        <section className="flex flex-col justify-center min-h-screen bg-porcelain text-ink relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-stone to-transparent z-0" />
+        {/* ------------------------------------------------------------------ */}
+        {/* 04 — Expertise                                                     */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="bg-porcelain py-20 text-ink md:py-32">
+          <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-18">
+            <div className="mb-12 grid grid-cols-1 gap-10 md:mb-16 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-7">
+                <Reveal>
+                  <SectionLabel className="text-ink/50">
+                    Our Expertise
+                  </SectionLabel>
+                </Reveal>
+                <Reveal delay={0.06}>
+                  <h2 className="mt-7 font-sans text-3xl leading-[1.02] md:mt-9 md:text-5xl lg:text-6xl">
+                    The craft behind
+                    <br />
+                    the <span className="accent-word">finish.</span>
+                  </h2>
+                </Reveal>
+              </div>
 
-          {/* Ambient Glowing Orbs */}
-          <div className="absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-cyan-600/10 blur-[120px] mix-blend-multiply pointer-events-none z-0" />
-          <div className="absolute top-[40%] -right-[10%] w-[70vw] h-[70vw] rounded-full bg-amber-600/10 blur-[120px] mix-blend-multiply pointer-events-none z-0" />
-
-          <div className="relative z-10 max-w-[1440px] w-full mx-auto px-5 md:px-8 xl:px-18 flex flex-col items-center text-center">
-
-            {/* Spinning Sticker */}
-            <motion.div
-              className="absolute top-0 right-5 md:top-10 md:right-10 z-20 pointer-events-none opacity-60 mix-blend-multiply hidden md:block"
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-            >
-              <svg width="140" height="140" viewBox="0 0 140 140">
-                <defs>
-                  <path id="textPath" d="M 70, 70 m -50, 0 a 50,50 0 1,1 100,0 a 50,50 0 1,1 -100,0" />
-                </defs>
-                <text className="text-[11.5px] font-sans uppercase tracking-[0.27em] fill-ink font-medium">
-                  <textPath href="#textPath" startOffset="0%">
-                    Award Winning Design • Est. 2013 •
-                  </textPath>
-                </text>
-              </svg>
-            </motion.div>
-
-            {/* Centered Typography */}
-            <div className="mb-4 md:mb-6">
-              <p className="font-script text-3xl md:text-4xl opacity-90 mb-2 text-ink/80 capitalize">Our Portfolio</p>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif">
-                Spaces that tell a <span className="font-script text-[1.4em] font-normal mx-1 -mb-2 inline-block">story.</span>
-              </h2>
+              <div className="lg:col-span-4 lg:col-start-9 lg:self-end">
+                <Reveal delay={0.12}>
+                  <p className="text-base leading-relaxed text-ink/65 md:text-base">
+                    Six disciplines, one standard of execution. From the first
+                    setting-out line to the final polish, every stage is handled
+                    with the same measure of care.
+                  </p>
+                  <ButtonLink to="/expertise" variant="primary" className="mt-7">
+                    Explore Expertise
+                  </ButtonLink>
+                </Reveal>
+              </div>
             </div>
 
-            {/* Coverflow Image Slider */}
-            <div className="relative w-full max-w-[100vw] h-[45vh] md:h-[50vh] lg:h-[55vh] flex items-center justify-center perspective-[1200px] mt-4 md:mt-8 overflow-hidden">
+            <ServiceShowcase framed />
+          </div>
+        </section>
 
-              {selectedProjects.map((project, idx) => {
-                const diff = (idx - currentProject + selectedProjects.length) % selectedProjects.length;
+        {/* ------------------------------------------------------------------ */}
+        {/* 05 — Featured work                                                 */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="bg-ink py-20 text-porcelain md:py-32">
+          <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-18">
+            <div className="mb-12 grid grid-cols-1 gap-10 md:mb-16 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-7">
+                <Reveal>
+                  <SectionLabel className="text-porcelain/55">
+                    Selected Studies
+                  </SectionLabel>
+                </Reveal>
+                <Reveal delay={0.06}>
+                  <h2 className="mt-7 font-sans text-3xl leading-[1.02] md:mt-9 md:text-5xl lg:text-6xl">
+                    Surfaces that
+                    <br />
+                    speak{" "}
+                    <span className="accent-word">
+                      quietly.
+                    </span>
+                  </h2>
+                </Reveal>
+              </div>
 
-                let position = "hidden";
-                if (diff === 0) position = "center";
-                else if (diff === 1) position = "right1";
-                else if (diff === 2) position = "right2";
-                else if (diff === selectedProjects.length - 1) position = "left1";
-                else if (diff === selectedProjects.length - 2) position = "left2";
-
-                const variants = {
-                  center: { x: "0%", scale: 1, zIndex: 30, opacity: 1, rotateY: 0, boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 60px 15px rgba(255,255,255,0.2)" },
-                  right1: { x: "40%", scale: 0.8, zIndex: 20, opacity: 0.6, rotateY: -12, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,255,255,0)" },
-                  right2: { x: "70%", scale: 0.6, zIndex: 10, opacity: 0.3, rotateY: -20, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,255,255,0)" },
-                  left1: { x: "-40%", scale: 0.8, zIndex: 20, opacity: 0.6, rotateY: 12, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,255,255,0)" },
-                  left2: { x: "-70%", scale: 0.6, zIndex: 10, opacity: 0.3, rotateY: 20, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,255,255,0)" },
-                  hidden: { x: "0%", scale: 0.4, zIndex: 0, opacity: 0, rotateY: 0, boxShadow: "0 0 0 0 rgba(0,0,0,0)" },
-                };
-
-                return (
-                  <motion.div
-                    key={project.title}
-                    initial={false}
-                    animate={variants[position as keyof typeof variants]}
-                    transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
-                    className="absolute w-[60vw] sm:w-[45vw] md:w-[32vw] lg:w-[24vw] aspect-[4/5] shadow-2xl overflow-hidden cursor-pointer bg-stone rounded-sm"
-                    onClick={() => setCurrentProject(idx)}
+              <div className="lg:col-span-4 lg:col-start-9 lg:self-end">
+                <Reveal delay={0.12}>
+                  <p className="text-base leading-relaxed text-porcelain/60 md:text-base">
+                    A closer look at the material character, joint discipline,
+                    and finishing standards that define our work.
+                  </p>
+                  <ButtonLink
+                    to="/portfolio"
+                    variant="glass"
+                    className="mt-7"
                   >
-                    <ParallaxImage src={project.image} alt={project.title} speed={0} />
-
-                    {/* Dark overlay for side cards */}
-                    <motion.div
-                      className="absolute inset-0 bg-ink pointer-events-none mix-blend-multiply"
-                      initial={false}
-                      animate={{ opacity: position === "center" ? 0.1 : 0.6 }}
-                      transition={{ duration: 0.7 }}
-                    />
-
-                    {/* Text overlays only visible when center */}
-                    <motion.div
-                      className="absolute inset-0 flex flex-col justify-end p-6 md:p-10 z-20 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent pointer-events-none"
-                      initial={false}
-                      animate={{ opacity: position === "center" ? 1 : 0, y: position === "center" ? 0 : 20 }}
-                      transition={{ duration: 0.7 }}
-                    >
-                      <h3 className="text-xl md:text-2xl lg:text-3xl font-serif mb-2 text-porcelain">{project.title}</h3>
-                      <p className="text-[10px] md:text-xs font-sans opacity-80 text-porcelain tracking-widest uppercase">{project.category}</p>
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-
-              {/* Navigation Controls */}
-              <div className="absolute top-1/2 -translate-y-1/2 left-2 right-2 md:left-8 md:right-8 flex justify-between z-40 pointer-events-none">
-                <button
-                  onClick={prevProject}
-                  className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-porcelain/90 backdrop-blur-sm text-ink hover:bg-ink hover:text-porcelain transition-all duration-300 shadow-xl pointer-events-auto rounded-full"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={nextProject}
-                  className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-porcelain/90 backdrop-blur-sm text-ink hover:bg-ink hover:text-porcelain transition-all duration-300 shadow-xl pointer-events-auto rounded-full"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                    View All Studies
+                  </ButtonLink>
+                </Reveal>
               </div>
             </div>
 
-            {/* View All Button */}
-            <div className="mt-8 md:mt-10">
-              <Link to="/portfolio" className="inline-flex items-center justify-center bg-ink text-porcelain px-10 py-5 text-sm font-sans tracking-[0.15em] hover:bg-ink/85 hover:scale-[1.02] transition-all duration-300 group">
-                View All Projects <ArrowRight className="ml-3 w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
-              </Link>
-            </div>
-
+            <GalleryGrid
+              studies={featuredStudies.slice(0, 6)}
+              theme="dark"
+              stagger
+              framed
+            />
           </div>
         </section>
 
-        {/* Section 4: Philosophy / Interactive Crossfade Section */}
-        <section className="relative min-h-[65vh] lg:min-h-[80vh] flex flex-col justify-center overflow-hidden bg-ink py-12 md:py-20 lg:py-32">
+        {/* ------------------------------------------------------------------ */}
+        {/* 06 — Why KC                                                        */}
+        {/* ------------------------------------------------------------------ */}
+        <PaperFlowHero
+          images={marbleInteriors}
+          aside={experienceAside}
+          background="#f7f7f5"
+        />
 
-          {/* Background Images Crossfade */}
-          {philosophyImages.map((img, idx) => (
-            <div
-              key={idx}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${activePhilosophyBg === idx ? 'opacity-100' : 'opacity-0'}`}
-            >
-              <img src={img} alt="Philosophy background" className="w-full h-full object-cover scale-105" />
-            </div>
-          ))}
-
-          {/* Dark Overlay to make text pop */}
-          <div className="absolute inset-0 bg-ink/70 mix-blend-multiply pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent pointer-events-none" />
-
-          <div className="max-w-[1440px] w-full mx-auto px-5 md:px-8 xl:px-18 relative z-10 flex flex-col items-center text-center">
-
-            <p className="font-script text-3xl md:text-4xl text-porcelain mb-8 md:mb-12 lg:mb-16 capitalize">
-              — The Studio Philosophy
-            </p>
-
-            <div className="flex flex-col space-y-4 md:space-y-6 lg:space-y-8 w-full group">
-
-              {/* Line 1 */}
-              <div
-                className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif leading-tight transition-all duration-700 hover:scale-[1.02] cursor-pointer ${activePhilosophyBg === 0 ? 'text-porcelain' : 'text-porcelain/30'}`}
-                onMouseEnter={() => setActivePhilosophyBg(0)}
-              >
-                Good design is rarely a solitary act.
+        {/* ------------------------------------------------------------------ */}
+        {/* 07 — Journey                                                       */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="bg-ink py-20 text-porcelain md:py-32">
+          <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-18">
+            <div className="mb-12 grid grid-cols-1 gap-10 md:mb-16 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-7">
+                <Reveal>
+                  <SectionLabel className="text-porcelain/55">
+                    Our Journey
+                  </SectionLabel>
+                </Reveal>
+                <Reveal delay={0.06}>
+                  <h2 className="mt-7 font-sans text-3xl leading-[1.02] md:mt-9 md:text-5xl lg:text-6xl">
+                    A legacy measured
+                    <br />
+                    in{" "}
+                    <span className="accent-word">
+                      surfaces.
+                    </span>
+                  </h2>
+                </Reveal>
               </div>
 
-              {/* Line 2 */}
-              <div
-                className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif leading-tight transition-all duration-700 hover:scale-[1.02] cursor-pointer ${activePhilosophyBg === 1 ? 'text-porcelain' : 'text-porcelain/30'}`}
-                onMouseEnter={() => setActivePhilosophyBg(1)}
-              >
-                It is a dialogue between
+              <div className="lg:col-span-4 lg:col-start-9 lg:self-end">
+                <Reveal delay={0.12}>
+                  <p className="text-base leading-relaxed text-porcelain/60 md:text-base">
+                    From a first independent commission in 2000 to a
+                    father-and-son practice in 2026, the work has changed in
+                    scale — never in standard.
+                  </p>
+                  <ButtonLink to="/about" variant="glass" className="mt-7">
+                    Read Our Story
+                  </ButtonLink>
+                </Reveal>
               </div>
-
-              {/* Line 3 */}
-              <div
-                className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif leading-tight transition-all duration-700 hover:scale-[1.02] cursor-pointer ${activePhilosophyBg === 2 ? 'text-porcelain' : 'text-porcelain/30'}`}
-                onMouseEnter={() => setActivePhilosophyBg(2)}
-              >
-                <span className="font-script text-[1.4em] font-normal lowercase tracking-wide -mt-2 inline-block">vision, craft & living.</span>
-              </div>
-
             </div>
 
+            <Timeline framed />
           </div>
         </section>
 
-        {/* Section 5: Animated Stats Section */}
-        <section className="py-12 md:py-20 bg-porcelain relative z-10">
-          <div className="max-w-[1440px] w-full mx-auto px-5 md:px-8 xl:px-18">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-y border-ink/10 py-10 md:py-16">
-              <AnimatedNumber value={7} label="Years Experience" />
-              <AnimatedNumber value={262} label="Happy Clients" />
-              <AnimatedNumber value={48} label="Upcoming Projects" />
+        {/* ------------------------------------------------------------------ */}
+        {/* 08 — Contact                                                       */}
+        {/* ------------------------------------------------------------------ */}
+        <ContactCTA />
+
+        {/* ------------------------------------------------------------------ */}
+        {/* 09 — Glass mirror sphere                                           */}
+        {/* ------------------------------------------------------------------ */}
+        <section className="bg-porcelain py-20 text-ink md:py-32">
+          <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-18">
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8">
+              <div className="lg:col-span-6">
+                <Reveal>
+                  <SectionLabel className="text-ink/50">
+                    Reflections
+                  </SectionLabel>
+                </Reveal>
+                <Reveal delay={0.06}>
+                  <h2 className="mt-7 font-sans text-3xl leading-[1.02] md:mt-9 md:text-5xl lg:text-6xl">
+                    Every surface,
+                    <br />
+                    <span className="accent-word">
+                      seen from every side.
+                    </span>
+                  </h2>
+                </Reveal>
+              </div>
+
+              <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
+                <Reveal delay={0.12}>
+                  <p className="text-base leading-relaxed text-ink/65 md:text-base">
+                    A polished floor shows its quality in the light it throws
+                    back. This sphere is built the same way: hundreds of small
+                    mirrors, each set to its place on a grid. Move across it to
+                    knock a few loose, or press and hold to scatter them all —
+                    they settle back exactly where they belong, as every joint
+                    we set is held true.
+                  </p>
+                </Reveal>
+              </div>
             </div>
+
+            <Reveal delay={0.1}>
+              <div className="mt-14 h-[min(80svh,640px)] w-full md:mt-20">
+                <GlassMirrorSphere
+                  reflectionText="KC PRAJAPATI"
+                  background="transparent"
+                />
+              </div>
+            </Reveal>
           </div>
         </section>
-
-
-
       </main>
+
+      {/* 10 — Footer */}
       <Footer />
     </PageTransition>
   );

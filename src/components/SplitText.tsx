@@ -1,24 +1,31 @@
-"use client";
-
-import { motion, Variants } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { cn } from "@/utils/cn";
 
 interface SplitTextProps {
   text: string;
   className?: string;
+  lineClassName?: string;
   delay?: number;
+  as?: "div" | "h1" | "h2" | "h3" | "p" | "span";
 }
 
-export default function SplitText({ text, className = "", delay = 0 }: SplitTextProps) {
-  // Split text by lines based on newline characters or just words for simple animations
-  // Here we split by lines. If you want word by word, change the split logic.
+export default function SplitText({
+  text,
+  className = "",
+  lineClassName = "",
+  delay = 0,
+  as = "div",
+}: SplitTextProps) {
   const lines = text.split("\n");
+  const reduceMotion = useReducedMotion();
+  const Tag = motion[as];
 
   const container: Variants = {
-    hidden: { opacity: 0 },
-    visible: (i = 1) => ({
+    hidden: { opacity: reduceMotion ? 1 : 0 },
+    visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: delay * i },
-    }),
+      transition: { staggerChildren: 0.12, delayChildren: delay },
+    },
   };
 
   const child: Variants = {
@@ -28,30 +35,44 @@ export default function SplitText({ text, className = "", delay = 0 }: SplitText
       transition: {
         type: "tween",
         ease: [0.22, 1, 0.36, 1],
-        duration: 0.8,
+        duration: 0.9,
       },
     },
     hidden: {
       opacity: 0,
-      y: 40,
+      y: reduceMotion ? 0 : "105%",
     },
   };
 
   return (
-    <motion.div
+    <Tag
       variants={container}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-10%" }}
+      viewport={{ once: true, margin: "-8%" }}
       className={className}
     >
       {lines.map((line, index) => (
-        <span key={index} className="block overflow-hidden">
+        <span
+          key={`${line}-${index}`}
+          className={cn(
+            "-my-[0.12em] block overflow-hidden py-[0.12em]",
+            lineClassName,
+          )}
+        >
           <motion.span variants={child} className="block">
-            {line}
+            {line.split(/\*(.+?)\*/).map((part, partIndex) =>
+              partIndex % 2 === 1 ? (
+                <span key={partIndex} className="accent-word">
+                  {part}
+                </span>
+              ) : (
+                part
+              ),
+            )}
           </motion.span>
         </span>
       ))}
-    </motion.div>
+    </Tag>
   );
 }

@@ -2,54 +2,50 @@ import { Suspense, lazy, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import ProgressLoader from "@/components/ProgressLoader";
+import LenisProvider from "@/components/LenisProvider";
+import { ContactModalProvider } from "@/components/ContactModal";
+import { scrollToHash } from "@/lib/scroll";
 
 function ScrollToTop() {
   const location = useLocation();
-  
+
   useEffect(() => {
+    if (location.hash) {
+      return scrollToHash(decodeURIComponent(location.hash.slice(1)));
+    }
+
     window.scrollTo(0, 0);
-  }, [location.pathname]);
-  
+    return undefined;
+  }, [location.pathname, location.hash]);
+
   return null;
 }
 
-const lazyWithDelay = (importFunc: () => Promise<any>, delay = 2000) => {
-  return lazy(() => {
-    return Promise.all([
-      importFunc(),
-      new Promise(resolve => setTimeout(resolve, delay))
-    ]).then(([moduleExports]) => moduleExports);
-  });
-};
-
-const Home = lazyWithDelay(() => import("@/pages/Home"));
-const About = lazyWithDelay(() => import("@/pages/About"));
-const Portfolio = lazyWithDelay(() => import("@/pages/Portfolio"));
-const ProjectDetail = lazyWithDelay(() => import("@/pages/ProjectDetail"));
-const Team = lazyWithDelay(() => import("@/pages/Team"));
-const Press = lazyWithDelay(() => import("@/pages/Press"));
-const Contact = lazyWithDelay(() => import("@/pages/Contact"));
-const PrivacyPolicy = lazyWithDelay(() => import("@/pages/PrivacyPolicy"));
-const TermsOfService = lazyWithDelay(() => import("@/pages/TermsOfService"));
-const NotFound = lazyWithDelay(() => import("@/pages/NotFound"));
-
-import CustomCursor from "@/components/CustomCursor";
-import LenisProvider from "@/components/LenisProvider";
-import PetButterfly from "@/components/PetButterfly";
+const Home = lazy(() => import("@/pages/Home"));
+const About = lazy(() => import("@/pages/About"));
+const Expertise = lazy(() => import("@/pages/Expertise"));
+const Portfolio = lazy(() => import("@/pages/Portfolio"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const PrivacyPolicy = lazy(() => import("@/pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("@/pages/TermsOfService"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
+    <AnimatePresence
+      mode="wait"
+      onExitComplete={() => {
+        if (!window.location.hash) window.scrollTo(0, 0);
+      }}
+    >
       <Suspense fallback={<ProgressLoader />}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/expertise" element={<Expertise />} />
           <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/portfolio/:slug" element={<ProjectDetail />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/press" element={<Press />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
@@ -65,9 +61,15 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <LenisProvider>
-        <PetButterfly />
-        <CustomCursor />
-        <AnimatedRoutes />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-porcelain focus:px-4 focus:py-2 focus:text-[10px] focus:font-medium focus:text-ink"
+        >
+          Skip to content
+        </a>
+        <ContactModalProvider>
+          <AnimatedRoutes />
+        </ContactModalProvider>
       </LenisProvider>
     </BrowserRouter>
   );

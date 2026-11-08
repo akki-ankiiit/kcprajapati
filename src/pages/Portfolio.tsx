@@ -1,250 +1,158 @@
-"use client";
-
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
-import ParallaxImage from "@/components/ParallaxImage";
-import { LayoutGrid, List, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import PageHero from "@/components/PageHero";
+import GalleryGrid from "@/components/GalleryGrid";
+import GalleryLightbox from "@/components/GalleryLightbox";
+import ContactCTA from "@/components/ContactCTA";
+import usePageMeta from "@/hooks/usePageMeta";
+import {
+  workCategories,
+  workStudies,
+  type WorkCategory,
+} from "@/data/work";
 import { cn } from "@/utils/cn";
-import { Link } from "react-router-dom";
-import { projects } from "@/data/projects";
-
-const categories = ["All", "Interiors", "Architecture", "Architecture & Interiors"];
-
-function EditorialCard({ project }: { project: typeof projects[0] }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Combine hero image with up to 3 gallery images
-  const images = [
-    project.heroImage,
-    ...(project.galleries[0]?.images.slice(0, 3) || [])
-  ];
-
-  const nextSlide = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevSlide = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const setSlide = (e: React.MouseEvent, index: number) => {
-    e.preventDefault();
-    setCurrentIndex(index);
-  };
-
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="group col-span-1 flex flex-col"
-    >
-      <Link to={`/portfolio/${project.id}`} className="block relative w-full aspect-[4/5] overflow-hidden mb-5 bg-stone">
-        
-        {/* Images */}
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={currentIndex}
-            src={images[currentIndex]}
-            alt={`${project.title} - ${currentIndex + 1}`}
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[2000ms]"
-          />
-        </AnimatePresence>
-        
-        {/* Overlay gradient for dots visibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-        {/* Carousel Controls (Arrows) */}
-        {images.length > 1 && (
-          <>
-            <button 
-              onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-porcelain/10 backdrop-blur-md text-porcelain opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-porcelain/30 z-10"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button 
-              onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-porcelain/10 backdrop-blur-md text-porcelain opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-porcelain/30 z-10"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-
-            {/* Dots */}
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center space-x-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              {images.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={(e) => setSlide(e, idx)}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all duration-300",
-                    currentIndex === idx ? "bg-porcelain w-3" : "bg-porcelain/50 hover:bg-porcelain/80 w-1.5"
-                  )}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </Link>
-
-      {/* Text Hierarchy */}
-      <Link to={`/portfolio/${project.id}`} className="block flex-1 flex flex-col justify-between">
-        <div>
-          <div className="flex justify-between items-baseline mb-2">
-            <h3 className="text-2xl font-serif group-hover:translate-x-1 transition-transform duration-500">{project.title}</h3>
-            <span className="text-xs font-sans tracking-[0.2em] opacity-40 ml-4">{project.year}</span>
-          </div>
-          <p className="text-[10px] md:text-xs font-sans uppercase tracking-[0.15em] opacity-60">
-            {project.category} <span className="mx-2 opacity-30">/</span> {project.location}
-          </p>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
 
 export default function Portfolio() {
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [viewMode, setViewMode] = useState<"editorial" | "index">("editorial");
+  const [activeCategory, setActiveCategory] = useState<WorkCategory>("All");
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const filteredProjects = projects.filter(p => activeFilter === "All" || p.category === activeFilter);
+  usePageMeta({
+    title: "Our Work",
+    description:
+      "Material and craftsmanship studies in marble flooring, premium tile work, wall installations, stone finishing, and large-format tiles by KC Prajapati India.",
+    image: "/images/kc/marble-tile-pattern.webp",
+  });
+
+  const filteredStudies = useMemo(
+    () =>
+      activeCategory === "All"
+        ? workStudies
+        : workStudies.filter((study) => study.category === activeCategory),
+    [activeCategory],
+  );
+
+  useEffect(() => {
+    setLightboxIndex(null);
+  }, [activeCategory]);
 
   return (
     <PageTransition>
-      <Header theme="light" />
-      <main className="min-h-screen bg-porcelain pb-16 md:pb-24 text-ink">
-        
-        {/* Hero */}
-        <section className="relative min-h-[65vh] lg:min-h-[80vh] w-full flex flex-col justify-end pt-24 lg:pt-40 pb-10 md:pb-16 lg:pb-16 md:pb-24 overflow-hidden bg-ink">
-          <div className="absolute inset-0 z-0">
-            <ParallaxImage
-              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000"
-              alt="Selected Work"
-              speed={0.6}
-              priority
-            />
-            {/* Increased overlay for visibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/20 mix-blend-normal" />
+      <Header />
+      <main id="main-content" className="min-h-screen bg-porcelain">
+        <PageHero
+          label="Our Work"
+          title={
+            <>
+              Studies in
+              <br />
+              material and{" "}
+              <span className="accent-word">
+                craft.
+              </span>
+            </>
+          }
+          description="A closer look at the surfaces, joints, edges, and finishes that define our work. The images below are illustrative material and craftsmanship studies, not client project photography."
+          image="/images/kc/marble-tile-pattern.webp"
+          imageAlt="Geometric marble floor tiles arranged in a considered pattern"
+          meta={["16 Studies", "06 Categories", "Illustrative Imagery"]}
+        />
+
+        <section className="border-b border-ink/10 bg-porcelain/95 text-ink backdrop-blur-md">
+          <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-4 px-5 py-4 md:flex-row md:items-center md:justify-between md:px-8 md:py-5 xl:px-18">
+            <div
+              className="no-scrollbar -mx-1 flex gap-x-6 overflow-x-auto px-1 py-1 md:gap-x-8"
+              role="tablist"
+              aria-label="Filter studies by category"
+            >
+              {workCategories.map((category) => {
+                const isActive = activeCategory === category;
+
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveCategory(category)}
+                    className={cn(
+                      "relative shrink-0 whitespace-nowrap pb-2 text-xs font-medium transition-opacity md:text-sm",
+                      isActive
+                        ? "text-ink opacity-100"
+                        : "text-ink opacity-40 hover:opacity-70",
+                    )}
+                  >
+                    {category}
+                    {isActive && (
+                      <motion.span
+                        layoutId="portfolio-filter"
+                        className="absolute inset-x-0 -bottom-px h-px bg-ink"
+                        transition={{
+                          type: "spring",
+                          stiffness: 350,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="shrink-0 text-xs text-ink/40">
+              {String(filteredStudies.length).padStart(2, "0")} studies
+            </p>
           </div>
-          
-          <div className="relative z-10 px-5 md:px-8 xl:px-18 max-w-[1440px] mx-auto w-full text-porcelain flex flex-col md:flex-row justify-between items-end">
-            <div className="max-w-4xl">
-              <p className="font-script text-3xl md:text-4xl mb-6 opacity-90 capitalize">Selected Work</p>
-              <h1 className="text-5xl md:text-[6vw] lg:text-[7vw] leading-[1.1] font-serif mb-6 tracking-tight text-porcelain/95">
-                Spaces with a story <br className="hidden md:block" />
-                of their <span className="font-script text-[1.2em] font-normal lowercase pr-8 pb-4 -mb-4 pt-2 -mt-2 pl-4 -ml-4 inline-block opacity-90">own.</span>
-              </h1>
-              <p className="text-sm md:text-lg font-sans opacity-80 max-w-xl font-light tracking-wide mb-10 leading-relaxed">
-                Explore residential, hospitality, retail and commercial environments shaped through material, proportion and personal expression.
+        </section>
+
+        <section className="bg-porcelain py-12 text-ink md:py-20">
+          <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-18">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeCategory}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <GalleryGrid
+                  studies={filteredStudies}
+                  onOpen={setLightboxIndex}
+                  priorityCount={3}
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="mt-14 border-t border-ink/10 pt-7 md:mt-20">
+              <p className="max-w-2xl text-xs leading-relaxed text-ink/40">
+                All imagery is illustrative. Real KC Prajapati India project
+                photography will replace these studies as it becomes available.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Sticky Filters & View Switcher */}
-        <section className="sticky top-16 z-30 bg-porcelain/90 backdrop-blur-md border-b border-ink/10 mb-8 md:mb-12">
-          <div className="max-w-[1440px] mx-auto px-5 md:px-8 xl:px-18 py-3 md:py-4 flex flex-row justify-between items-center gap-4">
-            {/* Filters */}
-            <div 
-              className="flex-1 overflow-x-auto no-scrollbar relative pr-2 md:pr-4"
-              style={{ maskImage: 'linear-gradient(to right, black calc(100% - 32px), transparent 100%)', WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 32px), transparent 100%)' }}
-            >
-              <div className="flex gap-x-6 md:gap-x-8 min-w-max pr-12 py-2">
-                {categories.map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveFilter(cat)}
-                    className={cn(
-                      "text-[11px] md:text-sm font-sans uppercase tracking-[0.15em] transition-opacity relative pb-1 whitespace-nowrap",
-                      activeFilter === cat ? "opacity-100 font-medium" : "opacity-40 hover:opacity-70"
-                    )}
-                  >
-                    {cat}
-                    {activeFilter === cat && (
-                      <motion.div layoutId="portfolio-filter" className="absolute -bottom-1 md:-bottom-2 left-0 right-0 h-[1px] bg-ink" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* View Mode */}
-            <div className="flex items-center space-x-3 md:space-x-4 border-l border-ink/20 pl-4 md:pl-6 shrink-0">
-              <button
-                onClick={() => setViewMode("editorial")}
-                className={cn("p-1.5 md:p-2 transition-opacity", viewMode === "editorial" ? "opacity-100" : "opacity-40 hover:opacity-70")}
-              >
-                <LayoutGrid className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode("index")}
-                className={cn("p-1.5 md:p-2 transition-opacity", viewMode === "index" ? "opacity-100" : "opacity-40 hover:opacity-70")}
-              >
-                <List className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Gallery */}
-        <section className="px-5 md:px-8 xl:px-18 max-w-[1440px] mx-auto min-h-[60vh]">
-          <AnimatePresence mode="wait">
-            {viewMode === "editorial" ? (
-              <motion.div
-                key="editorial"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              >
-                {filteredProjects.map((project) => (
-                  <EditorialCard key={project.id} project={project} />
-                ))}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="index"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col border-t border-ink/10"
-              >
-                {filteredProjects.map((project, idx) => (
-                  <Link to={`/portfolio/${project.id}`} key={project.id} className="group flex items-center justify-between py-6 border-b border-ink/10 hover:bg-stone/30 transition-colors relative">
-                    <div className="flex items-center space-x-8 md:space-x-16 px-4">
-                      <span className="text-sm font-sans opacity-40">0{idx + 1}</span>
-                      <h3 className="text-2xl md:text-4xl font-serif group-hover:translate-x-4 transition-transform duration-500">{project.title}</h3>
-                    </div>
-                    <div className="hidden md:flex items-center space-x-16 text-sm font-sans uppercase tracking-widest opacity-50 pr-4">
-                      <span className="w-24">{project.category}</span>
-                      <span className="w-24">{project.location}</span>
-                      <span className="w-12 text-right">{project.year}</span>
-                    </div>
-
-                    {/* Hover Thumbnail */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 aspect-[4/3] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 overflow-hidden hidden md:block">
-                    <img src={project.heroImage} alt="" className="object-cover w-full h-full" />
-                    </div>
-                  </Link>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </section>
-
+        <ContactCTA
+          image="/images/kc/marble-hallway.webp"
+          imageAlt="Long corridor with large-format marble flooring"
+          label="Discuss a Project"
+          description="Have a surface in mind? Share the space, the material, and the finish you are looking for. We will help you take it from drawing to handover."
+        />
       </main>
       <Footer />
+
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <GalleryLightbox
+            studies={filteredStudies}
+            index={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+            onChange={setLightboxIndex}
+          />
+        )}
+      </AnimatePresence>
     </PageTransition>
   );
 }
