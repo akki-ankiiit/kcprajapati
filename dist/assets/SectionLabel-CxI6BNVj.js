@@ -1,0 +1,1 @@
+import{et as e,o as t}from"./index-B9D4ITWU.js";var n=e();function r({children:e,className:r,lineClassName:i}){return(0,n.jsxs)(`span`,{className:t(`inline-flex items-center gap-2.5 font-sans text-sm font-medium md:text-[15px]`,r),children:[(0,n.jsx)(`span`,{className:t(`h-1.5 w-1.5 shrink-0 rounded-full bg-gold`,i),"aria-hidden":`true`}),e]})}export{r as t};
